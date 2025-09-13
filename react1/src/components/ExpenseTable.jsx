@@ -1,88 +1,105 @@
-import React from 'react'
+import React, { useState } from 'react';
 
-const ExpenseTable = ({expenses}) => {
+const ExpenseTable = ({ expenses }) => {
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Filter logic
+  const filteredExpenses = expenses.filter(
+    (expense) => selectedCategory === "" || expense.category === selectedCategory
+  );
+
   return (
-      <div className='flex
-        justify-between px-4'>
-          <div className=''>
-          <table className="expense-table">
-                                <caption className='bg-orange-400 '> This is simple prop sending</caption>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>
-              
-            </th>
-            <th className="amount-column">
-              <div>
-                <span>Amount</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10"
-                  viewBox="0 0 384 512"
-                  className="arrow up-arrow"
-                >
-                  <title>Ascending</title>
-                  <path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="10"
-                  viewBox="0 0 384 512"
-                  className="arrow down-arrow"
-                >
-                  <title>Descending</title>
-                  <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
-                </svg>
-              </div>
-            </th>
-          </tr>
-        </thead>
-              <tbody>
+    <div className="flex flex-col gap-6 px-4">
+      {/* Dropdown filter */}
+      <div className="mb-4">
+        <label className="mr-2 font-medium">Filter by Category:</label>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border rounded px-2 py-1"
+        >
+          <option value="">All</option>
+          <option value="grocery">Grocery</option>
+          <option value="clothes">Clothes</option>
+          <option value="bills">Bills</option>
+          <option value="education">Education</option>
+          <option value="medicine">Medicine</option>
+        </select>
+      </div>
 
-          {expenses.map((expense) => (
-            <tr key={expense.id}>
-              <td>{expense.title}</td>
-              <td>{expense.category}</td>
-              <td>{expense.amount}</td>
-            </tr>
-          ))}
-          <tr>
-            <th>Total</th>
-            <th></th>
-            <th>₹8100</th>
-          </tr>
-              </tbody>
-              
-            
+      <div className="flex justify-between">
+        {/* Table 1: normal prop access */}
+        <div>
+          <table className="expense-table">
+            <caption className="bg-orange-400">This is simple prop sending</caption>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredExpenses.map((expense) => (
+                <tr key={expense.id}>
+                  <td>{expense.title}</td>
+                  <td>{expense.category}</td>
+                  <td>{expense.amount}</td>
+                </tr>
+              ))}
+              <tr>
+                <th>Total</th>
+                <th></th>
+                <th>
+                  ₹
+                  {filteredExpenses.reduce(
+                    (sum, exp) => sum + Number(exp.amount),
+                    0
+                  )}
+                </th>
+              </tr>
+            </tbody>
           </table>
-       </div>
-          <div className=' '>
-              
-              <table className='expense-table'>
-                   <caption className='bg-green-400 w-full'>This is destructured prop sending
-                          and this will give the same out put 
-                  </caption>
-                  <tbody>
-                     
-          {expenses.map(({id, title, category, amount , }) => (
-            <tr key={id}>
-              <td>{title}</td>
-              <td>{category}</td>
-              <td>{amount}</td>
-            </tr>
-          ))}
-          <tr>
-            <th>Total</th>
-            <th></th>
-            <th>₹8100</th>
-          </tr>
-        </tbody>
-               </table>
-              </div>
-         
+        </div>
+
+        {/* Table 2: destructured props */}
+        <div>
+          <table className="expense-table">
+            <caption className="bg-green-400 w-full">
+              This is destructured prop sending
+            </caption>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredExpenses.map(({ id, title, category, amount }) => (
+                <tr key={id}>
+                  <td>{title}</td>
+                  <td>{category}</td>
+                  <td>{amount}</td>
+                </tr>
+              ))}
+              <tr>
+                <th>Total</th>
+                <th></th>
+                <th>
+                  ₹
+                  {filteredExpenses.reduce(
+                    (sum, exp) => sum + Number(exp.amount),
+                    0
+                  )}
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-export default ExpenseTable
+export default ExpenseTable;
