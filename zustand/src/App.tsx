@@ -22,7 +22,7 @@ function App() {
       <div className="flex gap-4 items-center">
         <Button onClick={inc} className="bg-green-500">+</Button>
         {count < 0 && <>
-        Count can be go below zero
+        Count can be go below zero and 
         </>}
         <span className="text-2xl font-bold">{count}</span>
         <Button onClick={dec} className="bg-red-500">-</Button>
